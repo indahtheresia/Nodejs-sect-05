@@ -4,6 +4,12 @@ exports.getProducts = (req, res, next) => {
   Product.fetchAll(products => res.render('shop/product-list', { prods: products, title: 'Products', path: '/products' }));
 }
 
+exports.getProduct = (req, res, next) => {
+  const prodId = req.params.productId;
+  console.log(prodId);
+  res.redirect('/');
+}
+
 exports.getIndex = (req, res, next) => {
   Product.fetchAll(products => res.render('shop/index', { prods: products, title: 'Shop', path: '/' }));
 }
