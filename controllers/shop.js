@@ -18,6 +18,12 @@ exports.getCart = (req, res, next) => {
   res.render('shop/cart', { title:'Cart', path:'/cart' });
 }
 
+exports.postCart = (req, res, next) => {
+  const prodId = req.body.productId;
+  console.log(prodId);
+  res.redirect('/cart');
+}
+
 exports.getOrders = (req, res, next) => {
   res.render('shop/orders', { title:'Your Orders', path:'/orders' });
 }
