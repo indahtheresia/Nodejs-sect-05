@@ -43,3 +43,8 @@ exports.postEditProduct = (req, res, next) => {
 exports.getAdminProducts = (req, res, next) => {
   Product.fetchAll(products => res.render('admin/products', { prods: products, title: 'Admin Products', path: '/admin/products' }));
 }
+
+exports.postDeleteProduct = (req, res, next) => {
+  const prodId = req.body.productId;
+  
+}
