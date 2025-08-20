@@ -3,9 +3,13 @@ const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 
+require('dotenv').config();
+// console.log(process.env.DATABASE_PASSWORD);
+
 const page404Controllers = require('./controllers/404');
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
+const db = require('./util/database');
 
 const app = express();
 
