@@ -15,7 +15,7 @@ exports.postAddProduct = (req, res, next) => {
     price: price,
     imageUrl: imageUrl,
     description: description
-  }).then(result => console.log(result)).catch(err => console.log(err));
+  }).then(result => console.log('Product Created!')).catch(err => console.log(err));
 }
 
 exports.getEditProduct = (req, res, next) => {
