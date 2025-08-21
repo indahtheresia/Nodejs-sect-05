@@ -9,7 +9,7 @@ require('dotenv').config();
 const page404Controllers = require('./controllers/404');
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
-const db = require('./util/database');
+const sequelize = require('./util/database');
 
 const app = express();
 
@@ -24,4 +24,8 @@ app.use(shopRoutes);
 
 app.use(page404Controllers.get404);
 
-app.listen(3000);
+sequelize.sync().then(result => {
+  // console.log(result);
+  app.listen(3000);
+}).catch(err => console.log(err));
+
