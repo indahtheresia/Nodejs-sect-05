@@ -7,7 +7,7 @@ require('dotenv').config();
 // console.log(process.env.DATABASE_PASSWORD);
 
 // const page404Controllers = require('./controllers/404');
-// const adminRoutes = require('./routes/admin');
+const adminRoutes = require('./routes/admin');
 // const shopRoutes = require('./routes/shop');
 const mongoConnect = require('./util/database').mongoConnect;
 
@@ -24,9 +24,10 @@ app.use((req, res, next) => {
   //   req.user = user;
   //   next();
   // }).catch(err => console.log(err));
+  next();
 })
 
-// app.use("/admin", adminRoutes);
+app.use("/admin", adminRoutes);
 // app.use(shopRoutes);
 
 // app.use(page404Controllers.get404);
