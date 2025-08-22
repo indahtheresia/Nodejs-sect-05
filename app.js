@@ -9,7 +9,7 @@ require('dotenv').config();
 // const page404Controllers = require('./controllers/404');
 // const adminRoutes = require('./routes/admin');
 // const shopRoutes = require('./routes/shop');
-const mongoConnect = require('./util/database');
+const mongoConnect = require('./util/database').mongoConnect;
 
 const app = express();
 
@@ -31,7 +31,6 @@ app.use((req, res, next) => {
 
 // app.use(page404Controllers.get404);
 
-mongoConnect(client => {
-  console.log(client);
+mongoConnect(() => {
   app.listen(3000);
 })
