@@ -1,8 +1,4 @@
-const mongodb = require('mongodb');
-
 const Product = require('../models/product');
-
-const ObjectId = mongodb.ObjectId;
 
 exports.getAddProduct = (req, res, next) => {
   // res.sendFile(path.join(rootDir, 'views', 'add-product.html'));
@@ -44,7 +40,7 @@ exports.postEditProduct = (req, res, next) => {
   const imageUrl = req.body.imageUrl;
   const price = req.body.price;
   const description = req.body.description;
-  const product = new Product(title, price, description, imageUrl, new ObjectId(`${prodId}`));
+  const product = new Product(title, price, description, imageUrl, prodId);
   product.save().then(result => {
     console.log('Product Edited');
     res.redirect('/admin/products');
