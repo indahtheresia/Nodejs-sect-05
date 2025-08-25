@@ -10,6 +10,7 @@ const page404Controllers = require('./controllers/404');
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 const mongoConnect = require('./util/database').mongoConnect;
+const User = require('./models/user');
 
 const app = express();
 
@@ -20,10 +21,10 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use((req, res, next) => {
-  // User.findByPk(1).then(user => {
-  //   req.user = user;
-  //   next();
-  // }).catch(err => console.log(err));
+  User.findByPk('68ac2a62de375fdaf687f34b').then(user => {
+    req.user = user;
+    next();
+  }).catch(err => console.log(err));
   next();
 })
 
