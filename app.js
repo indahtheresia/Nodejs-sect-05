@@ -6,9 +6,9 @@ const bodyParser = require('body-parser');
 require('dotenv').config();
 // console.log(process.env.DATABASE_PASSWORD);
 
-// const page404Controllers = require('./controllers/404');
+const page404Controllers = require('./controllers/404');
 const adminRoutes = require('./routes/admin');
-// const shopRoutes = require('./routes/shop');
+const shopRoutes = require('./routes/shop');
 const mongoConnect = require('./util/database').mongoConnect;
 
 const app = express();
@@ -28,9 +28,9 @@ app.use((req, res, next) => {
 })
 
 app.use("/admin", adminRoutes);
-// app.use(shopRoutes);
+app.use(shopRoutes);
 
-// app.use(page404Controllers.get404);
+app.use(page404Controllers.get404);
 
 mongoConnect(() => {
   app.listen(3000);
