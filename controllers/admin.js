@@ -18,22 +18,21 @@ exports.postAddProduct = (req, res, next) => {
   }).catch(err => console.log(err));
 }
 
-// exports.getEditProduct = (req, res, next) => {
-//   const editMode = req.query.edit;
-//   if (!editMode) {
-//     return res.redirect('/');
-//   }
-//   const prodId = req.params.productId;
-//   // Product.findByPk(prodId)
-//   req.user.getProducts({where: {id: prodId}})
-//   .then(products => {
-//     const product = products[0];
-//     if (!product) {
-//       return res.redirect('/');
-//     }
-//     res.render('admin/edit-product', { title: 'Edit Product', path:'/admin/edit-product', editing: editMode, product: product });
-//   }).catch(err => console.log(err));
-// }
+exports.getEditProduct = (req, res, next) => {
+  const editMode = req.query.edit;
+  if (!editMode) {
+    return res.redirect('/');
+  }
+  const prodId = req.params.productId;
+  // Product.findByPk(prodId)
+  Product.findById(prodId)
+  .then(product => {
+    if (!product) {
+      return res.redirect('/');
+    }
+    res.render('admin/edit-product', { title: 'Edit Product', path:'/admin/edit-product', editing: editMode, product: product });
+  }).catch(err => console.log(err));
+}
 
 // exports.postEditProduct = (req, res, next) => {
 //   const prodId = req.body.productId;
