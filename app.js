@@ -21,11 +21,10 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use((req, res, next) => {
-  User.findByPk('68ac2a62de375fdaf687f34b').then(user => {
+  User.findById('68ac2a62de375fdaf687f34b').then(user => {
     req.user = user;
     next();
   }).catch(err => console.log(err));
-  next();
 })
 
 app.use("/admin", adminRoutes);
