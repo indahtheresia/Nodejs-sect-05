@@ -10,7 +10,7 @@ require('dotenv').config();
 const page404Controllers = require('./controllers/404');
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
-// const User = require('./models/user');
+const User = require('./models/user');
 
 const app = express();
 
@@ -21,11 +21,10 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use((req, res, next) => {
-  // User.findById('68ac2a62de375fdaf687f34b').then(user => {
-  //   req.user = new User(user.name, user.email, user.cart, user._id);
-  //   next();
-  // }).catch(err => console.log(err));
-  next();
+  User.findById('68af1a28dd2c3928a3974eb4').then(user => {
+    req.user = user;
+    next();
+  }).catch(err => console.log(err));
 })
 
 app.use("/admin", adminRoutes);
@@ -34,5 +33,11 @@ app.use(shopRoutes);
 app.use(page404Controllers.get404);
 
 mongoose.connect(process.env.MONGODB_URL).then(result => {
+  User.findOne().then(user => {
+    if (!user) {
+      const user = new User({name: 'Indah', email: 'indah@gmail.com', cart: {items: []}});
+      user.save();
+    }
+  })
   app.listen(3000);
 }).catch(err => console.log(err));
