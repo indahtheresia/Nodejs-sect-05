@@ -2,6 +2,7 @@ const path = require('path');
 
 const express = require('express');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
 require('dotenv').config();
 // console.log(process.env.DATABASE_PASSWORD);
@@ -9,7 +10,6 @@ require('dotenv').config();
 const page404Controllers = require('./controllers/404');
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
-const mongoConnect = require('./util/database').mongoConnect;
 const User = require('./models/user');
 
 const app = express();
@@ -32,6 +32,6 @@ app.use(shopRoutes);
 
 app.use(page404Controllers.get404);
 
-mongoConnect(() => {
+mongoose.connect(process.env.MONGODB_URL).then(result => {
   app.listen(3000);
-})
+}).catch(err => console.log(err));
