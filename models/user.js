@@ -5,7 +5,7 @@ class User {
   constructor(name, email, cart, id) {
     this.name = name;
     this.email = email;
-    this.cart = cart ? cart : {};
+    this.cart = cart ? cart : {items: []};
     this._id = id;
   }
 
@@ -44,6 +44,16 @@ class User {
         }).quantity};
       })
     }).catch(err => console.log(err));
+  }
+
+  deleteItemFromCart(productId) {
+    const updatedCartItems = this.cart.items.filter(i => {
+      return i.productId.toString() !== productId.toString();
+    });
+
+    const updatedCart = { items: updatedCartItems };
+    const db = getDb();
+    return db.collection('users').updateOne({_id: new mongodb.ObjectId(`${this._id}`)}, {$set: {cart: updatedCart}});
   }
 
   static findById(userId) {
