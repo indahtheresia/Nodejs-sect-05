@@ -7,7 +7,7 @@ exports.getProducts = (req, res, next) => {
   // .select('title price -_id') // exclude id
   // .populate('userId', 'name')
   .then(products => {
-    res.render('shop/product-list', { prods: products, title: 'Products', path: '/products' })
+    res.render('shop/product-list', { prods: products, title: 'Products', path: '/products', isAuthenticated: req.isLoggedIn })
   }).catch(err => console.log(err));
 }
 
@@ -17,20 +17,20 @@ exports.getProduct = (req, res, next) => {
   //   res.render('shop/product-detail', { product: products[0], title: products[0].title, path: '/products' })
   // }).catch(err => console.log(err));
   Product.findById(prodId).then((product) => {
-    res.render('shop/product-detail', { product: product, title: product.title, path: '/products' })
+    res.render('shop/product-detail', { product: product, title: product.title, path: '/products', isAuthenticated: req.isLoggedIn })
   }).catch(err => console.log(err));
 }
 
 exports.getIndex = (req, res, next) => {
   Product.find().then(products => {
-    res.render('shop/index', { prods: products, title: 'Shop', path: '/' })
+    res.render('shop/index', { prods: products, title: 'Shop', path: '/', isAuthenticated: req.isLoggedIn })
   }).catch(err =>  console.log(err));
 }
 
 exports.getCart = (req, res, next) => {
   req.user.populate('cart.items.productId').then(user => {
     const products = user.cart.items;
-      res.render('shop/cart', { title:'Cart', path:'/cart', products: products })
+      res.render('shop/cart', { title:'Cart', path:'/cart', products: products, isAuthenticated: req.isLoggedIn })
     }).catch(err => console.log(err));
   // Cart.getCart(cart => {
   //   Product.fetchAll(products => {
@@ -110,7 +110,7 @@ exports.getOrders = (req, res, next) => {
   Order.find({'user.userId': req.user._id})
   .then(orders => {
     console.log(orders);
-    res.render('shop/orders', { title:'Your Orders', path:'/orders', orders: orders });
+    res.render('shop/orders', { title:'Your Orders', path:'/orders', orders: orders, isAuthenticated: req.isLoggedIn });
   })
   .catch(err => console.log(err));
 }
