@@ -106,10 +106,11 @@ exports.postOrder = (req, res, next) => {
   .then(result => res.redirect('/orders')).catch(err => console.log(err));
 }
 
-// exports.getOrders = (req, res, next) => {
-//   req.user.getOrders()
-//   .then(orders => {
-//     res.render('shop/orders', { title:'Your Orders', path:'/orders', orders: orders });
-//   })
-//   .catch(err => console.log(err));
-// }
+exports.getOrders = (req, res, next) => {
+  Order.find({'user.userId': req.user._id})
+  .then(orders => {
+    console.log(orders);
+    res.render('shop/orders', { title:'Your Orders', path:'/orders', orders: orders });
+  })
+  .catch(err => console.log(err));
+}
