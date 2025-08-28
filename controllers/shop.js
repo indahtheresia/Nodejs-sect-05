@@ -2,7 +2,10 @@ const Product = require('../models/product');
 // const Cart = require('../models/cart');
 
 exports.getProducts = (req, res, next) => {
-  Product.find().then(products => {
+  Product.find()
+  // .select('title price -_id') // exclude id
+  // .populate('userId', 'name')
+  .then(products => {
     res.render('shop/product-list', { prods: products, title: 'Products', path: '/products' })
   }).catch(err => console.log(err));
 }
