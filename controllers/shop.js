@@ -74,12 +74,12 @@ exports.postCart = (req, res, next) => {
   // }).then(() => res.redirect('/cart')).catch(err => console.log(err));
 }
 
-// exports.postCartDeleteProduct = (req, res, next) => {
-//   const prodId = req.body.productId;
-//   req.user.deleteItemFromCart(prodId)
-//   .then(result => res.redirect('/cart'))
-//   .catch(err => console.log(err));
-// }
+exports.postCartDeleteProduct = (req, res, next) => {
+  const prodId = req.body.productId;
+  req.user.deleteItemFromCart(prodId)
+  .then(result => res.redirect('/cart'))
+  .catch(err => console.log(err));
+}
 
 // // exports.getCheckout = (req, res, next) => {
 // //   res.render('shop/checkout', { title:'Checkout', path:'/checkout' });
