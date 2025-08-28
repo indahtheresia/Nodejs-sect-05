@@ -26,22 +26,23 @@ exports.getIndex = (req, res, next) => {
   }).catch(err =>  console.log(err));
 }
 
-// exports.getCart = (req, res, next) => {
-//   req.user.getCart().then(products => {
-//       res.render('shop/cart', { title:'Cart', path:'/cart', products: products })
-//     }).catch(err => console.log(err));
-//   // Cart.getCart(cart => {
-//   //   Product.fetchAll(products => {
-//   //     const cartProducts = [];
-//   //     for (product of products) {
-//   //       const cartProductData = cart.products.find(prod => prod.id === product.id);
-//   //       if (cartProductData) {
-//   //         cartProducts.push({ productData: product, qty: cartProductData.qty });
-//   //       }
-//   //     }
-//   //   })
-//   // })
-// }
+exports.getCart = (req, res, next) => {
+  req.user.populate('cart.items.productId').then(user => {
+    const products = user.cart.items;
+      res.render('shop/cart', { title:'Cart', path:'/cart', products: products })
+    }).catch(err => console.log(err));
+  // Cart.getCart(cart => {
+  //   Product.fetchAll(products => {
+  //     const cartProducts = [];
+  //     for (product of products) {
+  //       const cartProductData = cart.products.find(prod => prod.id === product.id);
+  //       if (cartProductData) {
+  //         cartProducts.push({ productData: product, qty: cartProductData.qty });
+  //       }
+  //     }
+  //   })
+  // })
+}
 
 exports.postCart = (req, res, next) => {
   const prodId = req.body.productId;
