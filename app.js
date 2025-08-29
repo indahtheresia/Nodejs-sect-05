@@ -33,11 +33,18 @@ app.use(session({
   store: store
 }));
 
+// app.use((req, res, next) => {
+//   User.findById('68af1a28dd2c3928a3974eb4').then(user => {
+//     req.user = user;
+//     next();
+//   }).catch(err => console.log(err));
+// })
+
 app.use((req, res, next) => {
-  User.findById('68af1a28dd2c3928a3974eb4').then(user => {
-    req.user = user;
-    next();
-  }).catch(err => console.log(err));
+  if (req.session && req.session.user) {
+    req.session.user = new User(req.session.user);
+  }
+  next();
 })
 
 app.use("/admin", adminRoutes);
