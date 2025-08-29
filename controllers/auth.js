@@ -7,10 +7,13 @@ exports.getLogin = (req, res, next) => {
 };
 
 exports.postLogin = (req, res, next) => {
-  req.session.isLoggedIn = true;
   User.findById('68af1a28dd2c3928a3974eb4').then(user => {
+    req.session.isLoggedIn = true;
     req.session.user = user;
-    res.redirect('/');
+    req.session.save(err => {
+      console.log(err);
+      res.redirect('/');
+    })
   }).catch(err => console.log(err));
   // res.setHeader('Set-Cookie', 'loggedIn=true; HttpOnly');
 }
