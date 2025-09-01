@@ -6,6 +6,10 @@ exports.getLogin = (req, res, next) => {
   res.render('auth/login', { title: 'Login', path: '/login', isAuthenticated: req.session.isLoggedIn });
 };
 
+exports.getSignup = (req, res, next) => {
+  res.render('auth/signup', { title: 'Signup', path: '/signup', isAuthenticated: req.session.isLoggedIn });
+}
+
 exports.postLogin = (req, res, next) => {
   User.findById('68af1a28dd2c3928a3974eb4').then(user => {
     req.session.isLoggedIn = true;
@@ -16,6 +20,10 @@ exports.postLogin = (req, res, next) => {
     })
   }).catch(err => console.log(err));
   // res.setHeader('Set-Cookie', 'loggedIn=true; HttpOnly');
+}
+
+exports.postSignup = (req, res, next) => {
+  
 }
 
 exports.postLogout = (req, res, next) => {
