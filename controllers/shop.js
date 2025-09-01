@@ -23,7 +23,7 @@ exports.getProduct = (req, res, next) => {
 
 exports.getIndex = (req, res, next) => {
   Product.find().then(products => {
-    res.render('shop/index', { prods: products, title: 'Shop', path: '/', isAuthenticated: req.session.isLoggedIn })
+    res.render('shop/index', { prods: products, title: 'Shop', path: '/', isAuthenticated: req.session.isLoggedIn, csrfToken: req.csrfToken() })
   }).catch(err =>  console.log(err));
 }
 
