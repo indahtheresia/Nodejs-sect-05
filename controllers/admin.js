@@ -55,7 +55,7 @@ exports.postEditProduct = (req, res, next) => {
 
 exports.getAdminProducts = (req, res, next) => {
   // Product.findAll()
-  Product.find()
+  Product.find({userId: req.user._id})
   .then(products => {
     res.render('admin/products', { prods: products, title: 'Admin Products', path: '/admin/products', isAuthenticated: req.session.isLoggedIn })
   }).catch(err => console.log(err));
