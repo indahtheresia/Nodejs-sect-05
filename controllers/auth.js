@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 
 const User = require('../models/user');
+const transporter = require('../util/send-mail');
 
 exports.getLogin = (req, res, next) => {
   // const isLoggedIn = req.get('Cookie').split(';')[1].split('=')[1];
@@ -77,6 +78,19 @@ exports.postSignup = (req, res, next) => {
       return user.save();
       })
       .then(result => {
+        let mailOps = {
+          from: process.env.EMAIL,
+          to: email,
+          subject: 'Signup succeeded!',
+          text: 'You successfully signed up!'
+        };
+        transporter.sendMail(mailOps, function(error, info){
+          if (error) {
+            console.log(error);
+          } else {
+            console.log('Email sent: ' + info.response);
+          }
+        })
         res.redirect('/login')
       })
   })
