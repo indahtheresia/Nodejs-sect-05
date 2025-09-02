@@ -5,7 +5,7 @@ const User = require('../models/user');
 exports.getLogin = (req, res, next) => {
   // const isLoggedIn = req.get('Cookie').split(';')[1].split('=')[1];
   console.log(req.session.isLoggedIn);
-  res.render('auth/login', { title: 'Login', path: '/login', isAuthenticated: req.session.isLoggedIn });
+  res.render('auth/login', { title: 'Login', path: '/login', isAuthenticated: req.session.isLoggedIn, errorMessage: req.flash('error') });
 };
 
 exports.getSignup = (req, res, next) => {
@@ -17,6 +17,7 @@ exports.postLogin = (req, res, next) => {
   const password = req.body.password;
   User.findOne({email: email}).then(user => {
     if (!user) {
+      req.flash('error', 'Invalid email or password');
       return res.redirect('/login');
     }
     bcrypt.compare(password, user.password)
