@@ -12,7 +12,6 @@ exports.getLogin = (req, res, next) => {
   } else {
     message = null;
   }
-  console.log(req.session.isLoggedIn);
   res.render('auth/login', { title: 'Login', path: '/login', isAuthenticated: req.session.isLoggedIn, errorMessage: message });
 };
 
@@ -24,7 +23,7 @@ exports.getSignup = (req, res, next) => {
   } else {
     message = null;
   }
-  res.render('auth/signup', { title: 'Signup', path: '/signup', isAuthenticated: req.session.isLoggedIn, errorMessage: message });
+  res.render('auth/signup', { title: 'Signup', path: '/signup', errorMessage: message });
 }
 
 exports.postLogin = (req, res, next) => {
@@ -102,4 +101,15 @@ exports.postLogout = (req, res, next) => {
     console.log(err);
     res.redirect('/');
   })
+}
+
+exports.getResetPassword = (req, res, next) => {
+  const errorMsg = req.flash('error');
+  let message;
+  if (errorMsg.length > 0) {
+    message = errorMsg[0];
+  } else {
+    message = null;
+  }
+  res.render('auth/reset', { title: 'Reset Password', path: '/reset', errorMessage: message });
 }
