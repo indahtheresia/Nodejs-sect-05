@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 
 const User = require('../models/user');
 const transporter = require('../util/send-mail');
@@ -112,4 +113,44 @@ exports.getResetPassword = (req, res, next) => {
     message = null;
   }
   res.render('auth/reset', { title: 'Reset Password', path: '/reset', errorMessage: message });
+}
+
+exports.postResetPassword = (req, res, next) => {
+  crypto.randomBytes(32, (err, buffer) => {
+    if (err) {
+      console.log(err);
+      return res.redirect('/reset');
+    }
+    const token = buffer.toString('hex');
+    User.findOne({email: req.body.email})
+    .then(user => {
+      if (!user) {
+        req.flash('error', 'No account with that email found.');
+        return res.redirect('/reset');
+      }
+      user.resetToken = token;
+      user.resetTokenExpiration = Date.now() + 3600000;
+      return user.save();
+    })
+    .then(result => {
+      res.redirect('/');
+      let mailOps = {
+          from: process.env.EMAIL,
+          to: req.body.email,
+          subject: 'Password reset',
+          html: `
+            <p>You requested a password reset</p>
+            <p>Click this <a href="http://localhost:3000/reset/${token}">link</a> to reset a new password</p>
+          `
+        };
+        transporter.sendMail(mailOps, function(error, info){
+          if (error) {
+            console.log(error);
+          } else {
+            console.log('Email sent: ' + info.response);
+          }
+        })
+    })
+    .catch(err => console.log(err));
+  })
 }
