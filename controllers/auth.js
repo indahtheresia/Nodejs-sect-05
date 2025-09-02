@@ -16,7 +16,14 @@ exports.getLogin = (req, res, next) => {
 };
 
 exports.getSignup = (req, res, next) => {
-  res.render('auth/signup', { title: 'Signup', path: '/signup', isAuthenticated: req.session.isLoggedIn });
+  const errorMsg = req.flash('error');
+  let message;
+  if (errorMsg.length > 0) {
+    message = errorMsg[0];
+  } else {
+    message = null;
+  }
+  res.render('auth/signup', { title: 'Signup', path: '/signup', isAuthenticated: req.session.isLoggedIn, errorMessage: message });
 }
 
 exports.postLogin = (req, res, next) => {
@@ -25,7 +32,9 @@ exports.postLogin = (req, res, next) => {
   User.findOne({email: email}).then(user => {
     if (!user) {
       req.flash('error', 'Invalid email or password');
-      return res.redirect('/login');
+      return req.session.save(err => {
+        res.redirect('/login');
+      }) 
     }
     bcrypt.compare(password, user.password)
     .then(doMatch => {
@@ -34,10 +43,13 @@ exports.postLogin = (req, res, next) => {
         req.session.user = user;
         return req.session.save(err => {
         console.log(err);
-        res.redirect('/');
+        return res.redirect('/');
       });
       }
-      res.redirect('/login');
+      req.flash('error', 'Invalid email or password');
+      return req.session.save(err => {
+        res.redirect('/login');
+      })
     })
   }).catch(err => console.log(err));
   // res.setHeader('Set-Cookie', 'loggedIn=true; HttpOnly');
@@ -50,7 +62,10 @@ exports.postSignup = (req, res, next) => {
   User.findOne({email: email})
   .then(userDoc => {
     if (userDoc) {
-      return res.redirect('/signup');
+      req.flash('error', 'E-mail exists already, please pick another one');
+      return req.session.save(err => {
+        res.redirect('/signup');
+      })
     }
     return bcrypt.hash(password, 12)
       .then(hashedPassword => {
