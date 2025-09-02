@@ -4,8 +4,15 @@ const User = require('../models/user');
 
 exports.getLogin = (req, res, next) => {
   // const isLoggedIn = req.get('Cookie').split(';')[1].split('=')[1];
+  const errorMsg = req.flash('error');
+  let message;
+  if (errorMsg.length > 0) {
+    message = errorMsg[0];
+  } else {
+    message = null;
+  }
   console.log(req.session.isLoggedIn);
-  res.render('auth/login', { title: 'Login', path: '/login', isAuthenticated: req.session.isLoggedIn, errorMessage: req.flash('error') });
+  res.render('auth/login', { title: 'Login', path: '/login', isAuthenticated: req.session.isLoggedIn, errorMessage: message });
 };
 
 exports.getSignup = (req, res, next) => {
