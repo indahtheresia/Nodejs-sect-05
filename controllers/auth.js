@@ -4,6 +4,7 @@ const validationResult = require('express-validator').validationResult;
 
 const User = require('../models/user');
 const transporter = require('../util/send-mail');
+const { ValidationError } = require('sequelize');
 
 exports.getLogin = (req, res, next) => {
   // const isLoggedIn = req.get('Cookie').split(';')[1].split('=')[1];
@@ -25,7 +26,7 @@ exports.getSignup = (req, res, next) => {
   } else {
     message = null;
   }
-  res.render('auth/signup', { title: 'Signup', path: '/signup', errorMessage: message, oldInput: {email: '', password: '', confirmPassword: ''} });
+  res.render('auth/signup', { title: 'Signup', path: '/signup', errorMessage: message, oldInput: {email: '', password: '', confirmPassword: ''}, validationErrors: [] });
 }
 
 exports.postLogin = (req, res, next) => {
@@ -68,7 +69,7 @@ exports.postSignup = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     console.log(errors.array());
-    return res.status(422).render('auth/signup', { title: 'Signup', path: '/signup', errorMessage: errors.array()[0].msg, oldInput: {email: email, password: password, confirmPassword: confirmPassword} })
+    return res.status(422).render('auth/signup', { title: 'Signup', path: '/signup', errorMessage: errors.array()[0].msg, oldInput: {email: email, password: password, confirmPassword: confirmPassword}, validationErrors: errors.array() })
   }
   bcrypt.hash(password, 12)
     .then(hashedPassword => {
