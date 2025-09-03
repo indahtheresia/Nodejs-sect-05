@@ -15,7 +15,7 @@ exports.getLogin = (req, res, next) => {
   } else {
     message = null;
   }
-  res.render('auth/login', { title: 'Login', path: '/login', isAuthenticated: req.session.isLoggedIn, errorMessage: message });
+  res.render('auth/login', { title: 'Login', path: '/login', isAuthenticated: req.session.isLoggedIn, errorMessage: message, oldInput: {email: '', password: ''}, validationErrors: [] });
 };
 
 exports.getSignup = (req, res, next) => {
@@ -34,14 +34,15 @@ exports.postLogin = (req, res, next) => {
   const password = req.body.password;
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(422).render('auth/login', { title: 'Login', path: '/login', isAuthenticated: req.session.isLoggedIn, errorMessage: errors.array()[0].msg });
+    return res.status(422).render('auth/login', { title: 'Login', path: '/login', isAuthenticated: req.session.isLoggedIn, errorMessage: errors.array()[0].msg, oldInput:{email: email, password: password}, validationErrors: errors.array() });
   }
   User.findOne({email: email}).then(user => {
     if (!user) {
-      req.flash('error', 'Invalid email or password');
-      return req.session.save(err => {
-        res.redirect('/login');
-      }) 
+      // req.flash('error', 'Invalid email or password');
+      // return req.session.save(err => {
+      //   res.redirect('/login');
+      // }) 
+      return res.status(422).render('auth/login', { title: 'Login', path: '/login', isAuthenticated: req.session.isLoggedIn, errorMessage: 'Invalid email or password', oldInput:{email: email, password: password}, validationErrors: [] });
     }
     bcrypt.compare(password, user.password)
     .then(doMatch => {
@@ -53,10 +54,11 @@ exports.postLogin = (req, res, next) => {
         return res.redirect('/');
       });
       }
-      req.flash('error', 'Invalid email or password');
-      return req.session.save(err => {
-        res.redirect('/login');
-      })
+      // req.flash('error', 'Invalid email or password');
+      // return req.session.save(err => {
+      //   res.redirect('/login');
+      // })
+      return res.status(422).render('auth/login', { title: 'Login', path: '/login', isAuthenticated: req.session.isLoggedIn, errorMessage: 'Invalid email or password', oldInput:{email: email, password: password}, validationErrors: [] });
     })
   }).catch(err => console.log(err));
   // res.setHeader('Set-Cookie', 'loggedIn=true; HttpOnly');
