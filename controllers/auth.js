@@ -66,40 +66,31 @@ exports.postSignup = (req, res, next) => {
     console.log(errors.array());
     return res.status(422).render('auth/signup', { title: 'Signup', path: '/signup', errorMessage: errors.array()[0].msg })
   }
-  User.findOne({email: email})
-  .then(userDoc => {
-    if (userDoc) {
-      req.flash('error', 'E-mail exists already, please pick another one');
-      return req.session.save(err => {
-        res.redirect('/signup');
+  bcrypt.hash(password, 12)
+    .then(hashedPassword => {
+      const user = new User({
+      email: email,
+      password: hashedPassword,
+      cart: { items: [] }
+    })
+    return user.save();
+    })
+    .then(result => {
+      let mailOps = {
+        from: process.env.EMAIL,
+        to: email,
+        subject: 'Signup succeeded!',
+        text: 'You successfully signed up!'
+      };
+      transporter.sendMail(mailOps, function(error, info){
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('Email sent: ' + info.response);
+        }
       })
-    }
-    return bcrypt.hash(password, 12)
-      .then(hashedPassword => {
-        const user = new User({
-        email: email,
-        password: hashedPassword,
-        cart: { items: [] }
-      })
-      return user.save();
-      })
-      .then(result => {
-        let mailOps = {
-          from: process.env.EMAIL,
-          to: email,
-          subject: 'Signup succeeded!',
-          text: 'You successfully signed up!'
-        };
-        transporter.sendMail(mailOps, function(error, info){
-          if (error) {
-            console.log(error);
-          } else {
-            console.log('Email sent: ' + info.response);
-          }
-        })
-        res.redirect('/login')
-      })
-  })
+      res.redirect('/login')
+    })
   .catch(err => console.log(err));
 }
 
