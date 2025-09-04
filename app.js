@@ -13,7 +13,7 @@ const csrfProtection = csrf();
 require('dotenv').config();
 // console.log(process.env.DATABASE_PASSWORD);
 
-const page404Controllers = require('./controllers/404');
+const pageErrorControllers = require('./controllers/error');
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 const authRoutes = require('./routes/auth');
@@ -72,7 +72,8 @@ app.use("/admin", adminRoutes);
 app.use(shopRoutes);
 app.use(authRoutes);
 
-app.use(page404Controllers.get404);
+app.use('/500', pageErrorControllers.get500);
+app.use(pageErrorControllers.get404);
 
 mongoose.connect(process.env.MONGODB_URL).then(result => {
   app.listen(3000);
