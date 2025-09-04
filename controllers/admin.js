@@ -36,7 +36,11 @@ exports.postAddProduct = (req, res, next) => {
     //   price: price,
     //   description: description
     // }, errorMessage: 'Some error occurred in database, please try again.', validationErrors: [] });
-    res.redirect('/500');
+    // res.redirect('/500');
+
+    const error = new Error(err);
+    error.httpStatusCode = 500;
+    return next(error);
   });
 }
 
@@ -53,7 +57,11 @@ exports.getEditProduct = (req, res, next) => {
       return res.redirect('/');
     }
     res.render('admin/edit-product', { title: 'Edit Product', path:'/admin/edit-product', editing: editMode, product: product, hasError: false, errorMessage: null, validationErrors: [] });
-  }).catch(err => console.log(err));
+  }).catch(err => {
+    const error = new Error(err);
+    error.httpStatusCode = 500;
+    return next(error);
+  });
 }
 
 exports.postEditProduct = (req, res, next) => {

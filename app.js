@@ -75,6 +75,11 @@ app.use(authRoutes);
 app.use('/500', pageErrorControllers.get500);
 app.use(pageErrorControllers.get404);
 
+app.use((error, req, res, next) => {
+  // res.status(error.httpStatusCode).render(...);
+  res.redirect('/500');
+})
+
 mongoose.connect(process.env.MONGODB_URL).then(result => {
   app.listen(3000);
 }).catch(err => console.log(err));
