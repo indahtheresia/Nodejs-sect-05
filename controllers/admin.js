@@ -11,15 +11,23 @@ exports.getAddProduct = (req, res, next) => {
 
 exports.postAddProduct = (req, res, next) => {
   const title = req.body.title;
-  const imageUrl = req.file;
+  const image = req.file;
   const price = req.body.price;
   const description = req.body.description;
   const errors = validationResult(req);
-  console.log(imageUrl);
+  if (!image) {
+    return res.status(422).render('admin/edit-product', { title: 'Add Product', path:'/admin/add-product', editing: false, hasError: true, product: {
+      title: title,
+      price: price,
+      description: description
+    }, errorMessage: 'Attached file extension not accepted', validationErrors: [] });
+  }
+  
+  const imageUrl = image.path;
+
   if (!errors.isEmpty()) {
     return res.status(422).render('admin/edit-product', { title: 'Add Product', path:'/admin/add-product', editing: false, hasError: true, product: {
       title: title,
-      imageUrl: imageUrl,
       price: price,
       description: description
     }, errorMessage: errors.array()[0].msg, validationErrors: errors.array() });
@@ -68,7 +76,7 @@ exports.getEditProduct = (req, res, next) => {
 exports.postEditProduct = (req, res, next) => {
   const prodId = req.body.productId;
   const title = req.body.title;
-  const imageUrl = req.body.imageUrl;
+  const image = req.file;
   const price = req.body.price;
   const description = req.body.description;
   const errors = validationResult(req);
@@ -86,7 +94,9 @@ exports.postEditProduct = (req, res, next) => {
       return res.redirect('/');
     }
     product.title = title;
-    product.imageUrl = imageUrl;
+    if (image) {
+      product.imageUrl = image.path;
+    }
     product.price = price;
     product.description = description;
     return product.save().then(result => {
