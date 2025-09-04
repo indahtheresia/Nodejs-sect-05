@@ -60,7 +60,11 @@ exports.postLogin = (req, res, next) => {
       // })
       return res.status(422).render('auth/login', { title: 'Login', path: '/login', isAuthenticated: req.session.isLoggedIn, errorMessage: 'Invalid email or password', oldInput:{email: email, password: password}, validationErrors: [] });
     })
-  }).catch(err => console.log(err));
+  }).catch(err => {
+    const error = new Error(err);
+    error.httpStatusCode = 500;
+    return next(error);
+  });
   // res.setHeader('Set-Cookie', 'loggedIn=true; HttpOnly');
 }
 
@@ -98,7 +102,11 @@ exports.postSignup = (req, res, next) => {
       })
       res.redirect('/login')
     })
-  .catch(err => console.log(err));
+  .catch(err => {
+    const error = new Error(err);
+    error.httpStatusCode = 500;
+    return next(error);
+  });
 }
 
 exports.postLogout = (req, res, next) => {
@@ -155,7 +163,11 @@ exports.postResetPassword = (req, res, next) => {
           }
         })
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+    const error = new Error(err);
+    error.httpStatusCode = 500;
+    return next(error);
+  });
   })
 }
 
@@ -172,7 +184,11 @@ exports.getNewPassword = (req, res, next) => {
     }
     res.render('auth/new-password', { title: 'New Password', path: '/new-password', errorMessage: message, userId: user._id.toString(), resetToken: token });
   })
-  .catch(err => console.log(err));
+  .catch(err => {
+    const error = new Error(err);
+    error.httpStatusCode = 500;
+    return next(error);
+  });
 }
 
 exports.postNewPassword = (req, res, next) => {
@@ -195,6 +211,8 @@ exports.postNewPassword = (req, res, next) => {
     res.redirect('/login');
   })
   .catch(err => {
-    console.log(err);
-  })
+    const error = new Error(err);
+    error.httpStatusCode = 500;
+    return next(error);
+  });
 }

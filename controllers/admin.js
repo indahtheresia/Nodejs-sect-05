@@ -93,7 +93,11 @@ exports.postEditProduct = (req, res, next) => {
       res.redirect('/admin/products');
     })
   })
-  .catch(err => console.log(err));
+  .catch(err => {
+    const error = new Error(err);
+    error.httpStatusCode = 500;
+    return next(error);
+  });
 }
 
 exports.getAdminProducts = (req, res, next) => {
@@ -101,7 +105,11 @@ exports.getAdminProducts = (req, res, next) => {
   Product.find({userId: req.user._id})
   .then(products => {
     res.render('admin/products', { prods: products, title: 'Admin Products', path: '/admin/products', isAuthenticated: req.session.isLoggedIn })
-  }).catch(err => console.log(err));
+  }).catch(err => {
+    const error = new Error(err);
+    error.httpStatusCode = 500;
+    return next(error);
+  });
 }
 
 exports.postDeleteProduct = (req, res, next) => {
@@ -109,5 +117,9 @@ exports.postDeleteProduct = (req, res, next) => {
   Product.deleteOne({ _id: prodId, userId: req.user._id }).then(() => {
     console.log('Product Deleted!');
     res.redirect('/admin/products');
-  }).catch(err => console.log(err));
+  }).catch(err => {
+    const error = new Error(err);
+    error.httpStatusCode = 500;
+    return next(error);
+  });
 }
