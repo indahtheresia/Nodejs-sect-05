@@ -83,7 +83,6 @@ exports.postEditProduct = (req, res, next) => {
   if (!errors.isEmpty()) {
     return res.status(422).render('admin/edit-product', { title: 'Edit Product', path:'/admin/edit-product', editing: true, hasError: true, product: {
       title: title,
-      imageUrl: imageUrl,
       price: price,
       description: description,
       _id: prodId
