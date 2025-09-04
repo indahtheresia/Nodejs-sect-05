@@ -11,7 +11,7 @@ exports.getAddProduct = (req, res, next) => {
 
 exports.postAddProduct = (req, res, next) => {
   const title = req.body.title;
-  const imageUrl = req.body.imageUrl;
+  const imageUrl = req.body.image;
   const price = req.body.price;
   const description = req.body.description;
   const errors = validationResult(req);
@@ -24,7 +24,7 @@ exports.postAddProduct = (req, res, next) => {
     }, errorMessage: errors.array()[0].msg, validationErrors: errors.array() });
   }
 
-  const product = new Product({_id: new mongoose.Types.ObjectId('68af1db35cd3bcb9f868e167'), title: title, price: price, description: description, imageUrl: imageUrl, userId: req.user});
+  const product = new Product({title: title, price: price, description: description, imageUrl: imageUrl, userId: req.user});
   
   product.save().then(result => {
     console.log('Product Created!');
